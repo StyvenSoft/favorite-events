@@ -2,10 +2,11 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const { graphqlHTTP } = require('express-graphql');
 const { buildSchema } = require('graphql');
+const mongose = require('mongoose');
+const Event = require('./models/event');
 
 const app = express();
 const PORT = process.env.PORT || 4000;
-const events = [];
 
 app.use(bodyParser.json());
 
@@ -44,14 +45,19 @@ app.use('/graphql', graphqlHTTP({
             return events;
         },
         createEvent: (args) => {
-            const event = {
-                _id: Math.random().toString(),
+            const event = new Event({
                 title: args.eventInput.title,
                 description: args.eventInput.description,
                 price: +args.eventInput.price,
-                date: args.eventInput.date
-            };
-            events.push(event);
+                date: new Date(args.eventInput.date)
+            });
+            return event.save().then(result => {
+                console.log(result);
+                return { ...result._doc };
+            }).catch(err => {
+                console.log(err);
+                throw err;
+            });
             return event;
         }
     },
@@ -62,6 +68,16 @@ app.get('/', (req, res, next) => {
     res.send("Working");
 })
 
-app.listen(PORT, () => {
-    console.log(`Server in listen on http://localhost:${PORT}`);
+mongose.connect(`
+    mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@cluster0.sn9ly.mongodb.net/${process.env.MONGO_DB}?retryWrites=true&w=majority
+`, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useCreateIndex: true
+}).then(() => {
+    app.listen(PORT, () => {
+        console.log(`Server in listen on http://localhost:${PORT}`);
+    });
+}).catch(err => {
+    console.log(err);
 });
