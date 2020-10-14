@@ -28,7 +28,7 @@ app.use('/graphql', graphqlHTTP({
         }
 
         type RootQuery {
-            event: [Event!]!
+            events: [Event!]!
         }
 
         type RootMutation {
@@ -41,8 +41,14 @@ app.use('/graphql', graphqlHTTP({
         }
     `),
     rootValue: {
-        event: () => {
-            return events;
+        events: () => {
+            return Event.find().then(events => {
+                return events.map(event => {
+                    return { ...event._doc, _id: event._doc._id.toString()};
+                    })
+            }).catch(err => {
+                throw err;
+            });
         },
         createEvent: (args) => {
             const event = new Event({
@@ -58,7 +64,6 @@ app.use('/graphql', graphqlHTTP({
                 console.log(err);
                 throw err;
             });
-            return event;
         }
     },
     graphiql: true
