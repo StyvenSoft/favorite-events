@@ -39,7 +39,7 @@ input UserInput {
 
 type RootQuery {
     events: [Event!]!
-    booking: [Booking!]!
+    bookings: [Booking!]!
 }
 
 type RootMutation {
