@@ -1,11 +1,9 @@
 import React, { Component } from 'react'
 
-export default class AuthPage extends Component {
+class AuthPage extends Component {
     render() {
-        return (
-            <div>
-                <h1>The authentication page</h1>
-            </div>
-        )
+        return <h1>The authentication page</h1>;
     }
 }
+
+export default AuthPage;
