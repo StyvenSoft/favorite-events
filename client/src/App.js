@@ -14,9 +14,9 @@ function App() {
         <main>
           <Switch>
             <Redirect from="/" to="/auth" exact />
-            <Route path="/auth" componet={AuthPage} />
-            <Route path="/events" componet={EventsPage} />
-            <Route path="/bookings" componet={BookingsPage} />
+            <Route path="/auth"><AuthPage /></Route>
+            <Route path="/events"><EventsPage /></Route>
+            <Route path="/bookings"><BookingsPage /></Route>
           </Switch>
         </main>
       </React.Fragment>
