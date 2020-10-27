@@ -36,9 +36,11 @@
 .main-navigation__items a {
     text-decoration: none;
     color: #fff;
+    font-weight: 600;
 }
 
 .main-navigation__items a:hover,
-.main-navigation__items a:active {
+.main-navigation__items a:active,
+.main-navigation__items a.active {
     color: #aaa;
 }
