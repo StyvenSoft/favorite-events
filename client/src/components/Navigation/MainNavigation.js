@@ -1,13 +1,14 @@
 import React from 'react'
 import { NavLink } from 'react-router-dom'
+import './MainNavigation.css'
 
 export default function MainNavigation() {
     return (
-        <header>
-            <div className="main_navigation__logo">
+        <header className="main-navigation">
+            <div className="main-navigation__logo">
                 <h1>Favorite Envents</h1>
             </div>
-            <nav className="main_navigation__item">
+            <nav className="main-navigation__items">
                 <ul>
                     <li><NavLink to="/auth">Authenticate</NavLink></li>
                     <li><NavLink to="/events">Events</NavLink></li>
