@@ -3,7 +3,7 @@ import './Auth.css'
 
 class AuthPage extends Component {
 
-    constructor (props) {
+    constructor(props) {
         super(props);
         this.emailEl = React.createRef();
         this.passwordEl = React.createRef();
@@ -14,16 +14,27 @@ class AuthPage extends Component {
         const email = this.emailEl.current.value;
         const password = this.passwordEl.current.value;
 
-        if(email.trim().length === 0 || password.trim().length === 0) {
+        if (email.trim().length === 0 || password.trim().length === 0) {
             return;
+        }
+
+        const requestBody = {
+            query: `
+                mutation {
+                    createUser(userInput: {email: "${email}", password: "${password}"}) {
+                        _id
+                        email
+                    }
+                }
+            `
         }
 
         fetch('http://localhost:4000/graphql', {
             method: 'POST',
-            body: JSON.stringify(),
+            body: JSON.stringify(requestBody),
             headers: {
                 'Content-Type': 'application/json'
-            } 
+            }
         });
     }
 
@@ -32,14 +43,14 @@ class AuthPage extends Component {
             <form className="auth-form" onSubmit={this.submitHandler}>
                 <div className="form-control">
                     <label htmlFor="email">E-mail</label>
-                    <input type="text" id="emal" ref={this.this.emailEl}/>
+                    <input type="text" id="emal" ref={this.this.emailEl} />
                 </div>
                 <div className="form-control">
                     <label htmlFor="password">Password</label>
-                    <input type="password" id="password" ref={this.passwordEl}/>
+                    <input type="password" id="password" ref={this.passwordEl} />
                 </div>
                 <div className="form-actions">
-                    <button type="submit">Submit</button> 
+                    <button type="submit">Submit</button>
                     <button htmlFor="button">Switch to Signup</button>
                 </div>
             </form>
