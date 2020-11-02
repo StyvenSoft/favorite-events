@@ -18,14 +18,16 @@ function App() {
     this.setState({ token: token, userId: userId });
   }
 
-  logout = () => { }
+  logout = () => {
+    this.setState({ token: null, userId: null })
+  }
 
   return (
     <Router>
       <React.Fragment>
         <AuthContext.Provider value={{
-          token: null,
-          userId: null,
+          token: this.state.token,
+          userId: this.state.userId,
           login: this.login,
           logout: this.logout
         }}>
