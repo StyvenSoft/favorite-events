@@ -4,7 +4,7 @@ import AuthContext from '../../context/auth-context';
 import './MainNavigation.css'
 
 export default function MainNavigation() {
-    <AuthContext.Consumer>
+    return <AuthContext.Consumer>
         {(context) => {
             return (
                 <header className="main-navigation">
@@ -14,9 +14,9 @@ export default function MainNavigation() {
                     <nav className="main-navigation__items">
                         <ul>
                             {!context.token && (
-                                <li><NavLink to="/auth">Authenticate</NavLink></li> 
+                                <li><NavLink to="/auth">Authenticate</NavLink></li>
                             )}
-                                <li><NavLink to="/events">Events</NavLink></li>
+                            <li><NavLink to="/events">Events</NavLink></li>
                             {context.token && (
                                 <li><NavLink to="/bookings">Bookings</NavLink></li>
                             )}

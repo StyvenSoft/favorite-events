@@ -89,7 +89,7 @@ class AuthPage extends Component {
                 </div>
                 <div className="form-control">
                     <label htmlFor="password">Password</label>
-                    <input type="current-password" id="password" ref={this.passwordEl} />
+                    <input type="password" id="password" ref={this.passwordEl} />
                 </div>
                 <div className="form-actions">
                     <button type="submit">Submit</button>
