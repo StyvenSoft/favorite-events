@@ -20,6 +20,10 @@ code {
     height: 1.5rem;
 }
 
+.form-control textarea {
+  width: 100%;
+}
+
 .form-control label {
     margin-bottom: 0.5rem;
     font-weight: 600;
