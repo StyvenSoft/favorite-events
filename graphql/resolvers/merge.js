@@ -1,5 +1,5 @@
 const Event = require('../../models/event');
-const User = require('./merge');
+const User = require('../../models/user');
 const { dateToString } = require('../../helpers/date');
 
 const events = async eventIds => {
@@ -10,7 +10,7 @@ const events = async eventIds => {
         });
     } catch (err) {
         throw err;
-    };
+    }
 };
 
 const singleEvent = async eventId => {
@@ -24,7 +24,7 @@ const singleEvent = async eventId => {
 
 const user = async userId => {
     try {
-        const user = await User.findById(userId)
+        const user = await User.findById(userId);
         return {
             ...user._doc,
             _id: user.id,
@@ -32,7 +32,7 @@ const user = async userId => {
         };
     } catch (err) {
         throw err;
-    };
+    }
 };
 
 const transformEvent = event => {

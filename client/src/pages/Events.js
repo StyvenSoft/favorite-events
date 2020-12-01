@@ -45,17 +45,12 @@ export default class EventsPage extends Component {
         const requestBody = {
             query: `
                     mutation {
-                        createEvent(eventInput: 
-                            {title: "${title}", 
-                            price: ${price}, 
-                            date: "${date}", 
-                            description: "${description}"}
-                            ) {
+                        createEvent(eventInput: {title: "${title}", description: "${description}", price: ${price}, date: "${date}"}) {
                             _id
                             title
+                            description
                             price
                             date
-                            description
                             creator {
                                 _id
                                 email
@@ -72,7 +67,7 @@ export default class EventsPage extends Component {
             body: JSON.stringify(requestBody),
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + token
+                Authorization: 'Bearer ' + token
             }
         }).then(res => {
             if (res.status !== 200 && res.status !== 201) {
