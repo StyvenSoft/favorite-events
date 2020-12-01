@@ -2,12 +2,15 @@ import React, { Component } from 'react';
 import './Events.css';
 import Modal from '../components/Modal/Modal';
 import Backdrop from '../components/Backdrop/Backdrop';
+import AuthContext from '../context/auth-context';
 
 export default class EventsPage extends Component {
 
     state = {
         creating: false
     }
+
+    static contextType = AuthContext;
 
     constructor(props) {
         super(props);
@@ -24,20 +27,70 @@ export default class EventsPage extends Component {
     modalConfirmHandler = () => {
         this.setState({ creating: false });
         const title = this.titleElRef.current.value;
-        const price = this.priceElRef.current.value;
+        const price = +this.priceElRef.current.value;
         const date = this.dateElRef.current.value;
         const description = this.descriptionElRef.current.value;
 
-        if(
+        if (
             title.trim().length === 0 ||
-            price.trim().length === 0 ||
+            price <= 0 ||
             date.trim().length === 0 ||
-            description.trim().length === 0 
+            description.trim().length === 0
         ) {
             return;
         }
-        const event = {title, price, date, description};
+        const event = { title, price, date, description };
         console.log(event);
+
+        const requestBody = {
+            query: `
+                    mutation {
+                        createEvent(eventInput: 
+                            {title: "${title}", 
+                            price: ${price}, 
+                            date: "${date}", 
+                            description: "${description}"}
+                            ) {
+                            _id
+                            title
+                            price
+                            date
+                            description
+                            creator {
+                                _id
+                                email
+                            }
+                        }
+                    }
+                `
+        }
+
+        const token = this.context.token;
+
+        fetch('http://localhost:4000/graphql', {
+            method: 'POST',
+            body: JSON.stringify(requestBody),
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token
+            }
+        }).then(res => {
+            if (res.status !== 200 && res.status !== 201) {
+                throw new Error('Failed!');
+            }
+            return res.json();
+        }).then(resData => {
+            console.log(resData);
+            // // if (resData.data.login.token) {
+            // //     this.context.login(
+            // //         resData.data.login.token,
+            // //         resData.data.login.userId,
+            // //         resData.data.login.tokenExpiration
+            // //     );
+            // }
+        }).catch(err => {
+            console.log(err);
+        });
     }
 
     modalCancelHandler = () => {
