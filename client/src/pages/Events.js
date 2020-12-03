@@ -7,7 +7,8 @@ import AuthContext from '../context/auth-context';
 export default class EventsPage extends Component {
 
     state = {
-        creating: false
+        creating: false,
+        events: []
     }
 
     static contextType = AuthContext;
@@ -18,6 +19,10 @@ export default class EventsPage extends Component {
         this.priceElRef = React.createRef();
         this.dateElRef = React.createRef();
         this.descriptionElRef = React.createRef();
+    }
+
+    componentDidMount() {
+        this.fetchEvents();
     }
 
     startCreateEventHandler = () => {
@@ -76,13 +81,6 @@ export default class EventsPage extends Component {
             return res.json();
         }).then(resData => {
             console.log(resData);
-            // // if (resData.data.login.token) {
-            // //     this.context.login(
-            // //         resData.data.login.token,
-            // //         resData.data.login.userId,
-            // //         resData.data.login.tokenExpiration
-            // //     );
-            // }
         }).catch(err => {
             console.log(err);
         });
@@ -90,6 +88,46 @@ export default class EventsPage extends Component {
 
     modalCancelHandler = () => {
         this.setState({ creating: false });
+    }
+
+    fetchEvents() {
+        const requestBody = {
+            query: `
+                    query {
+                        events {
+                            _id
+                            title
+                            description
+                            price
+                            date
+                            creator {
+                                _id
+                                email
+                            }
+                        }
+                    }
+                `
+        }
+
+        const token = this.context.token;
+
+        fetch('http://localhost:4000/graphql', {
+            method: 'POST',
+            body: JSON.stringify(requestBody),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then(res => {
+            if (res.status !== 200 && res.status !== 201) {
+                throw new Error('Failed!');
+            }
+            return res.json();
+        }).then(resData => {
+            const events = resData.data.events;
+            this.setState({ events: events });
+        }).catch(err => {
+            console.log(err);
+        });
     }
 
     render() {
@@ -122,10 +160,16 @@ export default class EventsPage extends Component {
                             </div>
                         </form>
                     </Modal>}
-                <div className="events-control">
-                    <p>Share your own Favorite Events!</p>
-                    <button className="btn" onClick={this.startCreateEventHandler}>Create Event</button>
-                </div>
+                {this.context.token && (
+                    <div className="events-control">
+                        <p>Share your own Favorite Events!</p>
+                        <button className="btn" onClick={this.startCreateEventHandler}>Create Event</button>
+                    </div>
+                )}
+                <ul className="events__list">
+                    <li className="events__list-item">Item</li>
+                    <li className="events__list-item">Item</li>
+                </ul>
             </React.Fragment>
         )
     }
