@@ -80,7 +80,7 @@ export default class EventsPage extends Component {
             }
             return res.json();
         }).then(resData => {
-            console.log(resData);
+            this.fetchEvents()
         }).catch(err => {
             console.log(err);
         });
@@ -131,6 +131,13 @@ export default class EventsPage extends Component {
     }
 
     render() {
+
+        const eventList = this.state.events.map(event => {
+            return (<li key={event._id} className="events__list-item">
+                {event.title}
+            </li>);
+        });
+
         return (
             <React.Fragment>
                 {this.state.creating && <Backdrop />}
@@ -167,8 +174,7 @@ export default class EventsPage extends Component {
                     </div>
                 )}
                 <ul className="events__list">
-                    <li className="events__list-item">Item</li>
-                    <li className="events__list-item">Item</li>
+                    {eventList}
                 </ul>
             </React.Fragment>
         )
