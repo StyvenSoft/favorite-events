@@ -79,7 +79,20 @@ export default class EventsPage extends Component {
             }
             return res.json();
         }).then(resData => {
-            this.fetchEvents()
+            this.setState(prevState => {
+                const updateEvents = [...prevState.events];
+                updateEvents.push({
+                    _id: resData.data.createEvent._id,
+                    title: resData.data.createEvent.title,
+                    description: resData.data.createEvent.description,
+                    date: resData.data.createEvent.date,
+                    price: resData.data.createEvent.price,
+                    creator: {
+                        _id: this.context.userId
+                    }
+                });
+                return {events: updateEvents};
+            })
         }).catch(err => {
             console.log(err);
         });
