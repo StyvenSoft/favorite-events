@@ -13,10 +13,10 @@ export default function MainNavigation() {
                     </div>
                     <nav className="main-navigation__items">
                         <ul>
-                            {!context.token && (
-                                <li><NavLink to="/auth">Authenticate</NavLink></li>
-                            )}
                             <li><NavLink to="/events">Events</NavLink></li>
+                            {!context.token && (
+                                <li><NavLink to="/auth">Login</NavLink></li>
+                            )}
                             {context.token && (
                                 <React.Fragment>
                                     <li>
