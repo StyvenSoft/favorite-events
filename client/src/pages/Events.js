@@ -3,6 +3,7 @@ import './Events.css';
 import Modal from '../components/Modal/Modal';
 import Backdrop from '../components/Backdrop/Backdrop';
 import AuthContext from '../context/auth-context';
+import EventList from '../components/Events/EventList/EventList';
 
 export default class EventsPage extends Component {
 
@@ -109,8 +110,6 @@ export default class EventsPage extends Component {
                 `
         }
 
-        const token = this.context.token;
-
         fetch('http://localhost:4000/graphql', {
             method: 'POST',
             body: JSON.stringify(requestBody),
@@ -131,13 +130,6 @@ export default class EventsPage extends Component {
     }
 
     render() {
-
-        const eventList = this.state.events.map(event => {
-            return (<li key={event._id} className="events__list-item">
-                {event.title}
-            </li>);
-        });
-
         return (
             <React.Fragment>
                 {this.state.creating && <Backdrop />}
@@ -173,9 +165,7 @@ export default class EventsPage extends Component {
                         <button className="btn" onClick={this.startCreateEventHandler}>Create Event</button>
                     </div>
                 )}
-                <ul className="events__list">
-                    {eventList}
-                </ul>
+                <EventList events={this.state.events} />
             </React.Fragment>
         )
     }
