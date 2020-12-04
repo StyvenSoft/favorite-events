@@ -45,8 +45,6 @@ export default class EventsPage extends Component {
         ) {
             return;
         }
-        const event = { title, price, date, description };
-        console.log(event);
 
         const requestBody = {
             query: `
@@ -165,7 +163,10 @@ export default class EventsPage extends Component {
                         <button className="btn" onClick={this.startCreateEventHandler}>Create Event</button>
                     </div>
                 )}
-                <EventList events={this.state.events} />
+                <EventList 
+                    events={this.state.events} 
+                    authUserId={this.context.userId}
+                />
             </React.Fragment>
         )
     }
