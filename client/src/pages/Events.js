@@ -164,7 +164,9 @@ export default class EventsPage extends Component {
                         canCancel
                         canConfirm
                         onCancel={this.modalCancelHandler}
-                        onConfirm={this.bookEventHandler}>
+                        onConfirm={this.bookEventHandler}
+                        confirmText="Save"
+                    >
                         <form>
                             <div className="form-control">
                                 <label htmlFor="title">Title</label>
@@ -191,6 +193,7 @@ export default class EventsPage extends Component {
                         canConfirm
                         onCancel={this.modalCancelHandler}
                         onConfirm={this.modalConfirmHandler}
+                        confirmText="Accept"
                     >
                         <h1>{this.state.selectedEvent.title}</h1>
                         <h2>$ {this.state.selectedEvent.price}</h2>
