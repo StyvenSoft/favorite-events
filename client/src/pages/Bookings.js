@@ -1,8 +1,7 @@
 import React, { Component } from 'react'
 import AuthContext from '../context/auth-context';
 
-export default class BookingsPage extends Component {
-
+class BookingsPage extends Component {
     state = {
         isLoading: false,
         bookings: []
@@ -16,22 +15,21 @@ export default class BookingsPage extends Component {
 
     fetchBookings = () => {
         this.setState({ isLoading: true });
-
         const requestBody = {
             query: `
-                    query {
-                        bookings {
-                            _id
-                            createdAt
-                            event {
-                                _id
-                                title
-                                date
-                            }
+                query {
+                    bookings {
+                    _id
+                    createdAt
+                    event {
+                        _id
+                        title
+                        date
                         }
                     }
-                `
-        }
+                }
+            `
+        };
 
         fetch('http://localhost:4000/graphql', {
             method: 'POST',
@@ -40,18 +38,21 @@ export default class BookingsPage extends Component {
                 'Content-Type': 'application/json',
                 Authorization: 'Bearer ' + this.context.token
             }
-        }).then(res => {
-            if (res.status !== 200 && res.status !== 201) {
-                throw new Error('Failed!');
-            }
-            return res.json();
-        }).then(resData => {
-            const bookings = resData.data.bookings;
-            this.setState({ bookings: bookings, isLoading: false });
-        }).catch(err => {
-            console.log(err);
-            this.setState({ isLoading: false });
-        });
+        })
+            .then(res => {
+                if (res.status !== 200 && res.status !== 201) {
+                    throw new Error('Failed!');
+                }
+                return res.json();
+            })
+            .then(resData => {
+                const bookings = resData.data.bookings;
+                this.setState({ bookings: bookings, isLoading: false });
+            })
+            .catch(err => {
+                console.log(err);
+                this.setState({ isLoading: false });
+            });
     };
 
     render() {
@@ -67,3 +68,5 @@ export default class BookingsPage extends Component {
         )
     }
 }
+
+export default BookingsPage;
