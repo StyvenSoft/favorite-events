@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import BookingChart from '../components/Bookings/BookingChart/BookingChart';
+import BookingsChart from '../components/Bookings/BookingChart/BookingChart';
 import BookingControls from '../components/Bookings/BookingControls/BookingControls';
 import BookingList from '../components/Bookings/BookingList/BookingList';
 import Spinner from '../components/Spinner/Spinner';
@@ -128,7 +128,7 @@ class BookingsPage extends Component {
                             <BookingList bookings={this.state.bookings}
                                          onDelete={this.deleteBookingHandler} />
                             ) : (
-                                <BookingChart bookings={this.state.bookings} />
+                                <BookingsChart bookings={this.state.bookings} />
                         )}
                     </div>
                 </React.Fragment>
