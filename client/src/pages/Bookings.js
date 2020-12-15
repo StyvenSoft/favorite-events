@@ -18,6 +18,22 @@ class BookingsPage extends Component {
         this.fetchBookings();
     }
 
+    fetchRequest = (requestBody) => {
+        return fetch('http://localhost:4000/graphql', {
+            method: 'POST',
+            body: JSON.stringify(requestBody),
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: 'Bearer ' + this.context.token
+            }
+        }).then(res => {
+            if (res.status !== 200 && res.status !== 201) {
+                throw new Error('Failed!');
+            }
+            return res.json();
+        })
+    }
+
     fetchBookings = () => {
         this.setState({ isLoading: true });
         const requestBody = {
@@ -37,24 +53,10 @@ class BookingsPage extends Component {
             `
         };
 
-        fetch('http://localhost:4000/graphql', {
-            method: 'POST',
-            body: JSON.stringify(requestBody),
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: 'Bearer ' + this.context.token
-            }
+        this.fetchRequest(requestBody).then(resData => {
+            const bookings = resData.data.bookings;
+            this.setState({ bookings: bookings, isLoading: false });
         })
-            .then(res => {
-                if (res.status !== 200 && res.status !== 201) {
-                    throw new Error('Failed!');
-                }
-                return res.json();
-            })
-            .then(resData => {
-                const bookings = resData.data.bookings;
-                this.setState({ bookings: bookings, isLoading: false });
-            })
             .catch(err => {
                 console.log(err);
                 this.setState({ isLoading: false });
@@ -77,28 +79,14 @@ class BookingsPage extends Component {
             }
         };
 
-        fetch('http://localhost:4000/graphql', {
-            method: 'POST',
-            body: JSON.stringify(requestBody),
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: 'Bearer ' + this.context.token
-            }
+        this.fetchRequest(requestBody).then(resData => {
+            this.setState(prevState => {
+                const updateBookings = prevState.bookings.filter(booking => {
+                    return booking._id !== bookingId;
+                });
+                return { bookings: updateBookings, isLoading: false };
+            })
         })
-            .then(res => {
-                if (res.status !== 200 && res.status !== 201) {
-                    throw new Error('Failed!');
-                }
-                return res.json();
-            })
-            .then(resData => {
-                this.setState(prevState => {
-                    const updateBookings = prevState.bookings.filter(booking => {
-                        return booking._id !== bookingId;
-                    });
-                    return { bookings: updateBookings, isLoading: false };
-                })
-            })
             .catch(err => {
                 console.log(err);
                 this.setState({ isLoading: false });
@@ -119,17 +107,17 @@ class BookingsPage extends Component {
         if (!this.state.isLoading) {
             content = (
                 <React.Fragment>
-                    <BookingControls 
+                    <BookingControls
                         activeOutput={this.state.outputType}
                         onChange={this.changeOutputTypeHandler}
                     />
                     <div>
                         {this.state.outputType === 'list' ? (
                             <BookingList bookings={this.state.bookings}
-                                         onDelete={this.deleteBookingHandler} />
-                            ) : (
+                                onDelete={this.deleteBookingHandler} />
+                        ) : (
                                 <BookingsChart bookings={this.state.bookings} />
-                        )}
+                            )}
                     </div>
                 </React.Fragment>
             );

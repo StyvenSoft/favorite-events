@@ -35,6 +35,22 @@ export default class EventsPage extends Component {
         this.setState({ creating: true })
     }
 
+    fetchRequest = (requestBody) => {
+        return fetch('http://localhost:4000/graphql', {
+            method: 'POST',
+            body: JSON.stringify(requestBody),
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: 'Bearer ' + this.context.token
+            }
+        }).then(res => {
+            if (res.status !== 200 && res.status !== 201) {
+                throw new Error('Failed!');
+            }
+            return res.json();
+        })
+    }
+
     modalConfirmHandler = () => {
         this.setState({ creating: false });
         const title = this.titleElRef.current.value;
@@ -67,29 +83,15 @@ export default class EventsPage extends Component {
                         }
                     }
                 `,
-                variables: {
-                    title: title,
-                    desc: description,
-                    price: price,
-                    date: date
-                }
+            variables: {
+                title: title,
+                desc: description,
+                price: price,
+                date: date
+            }
         }
 
-        const token = this.context.token;
-
-        fetch('http://localhost:4000/graphql', {
-            method: 'POST',
-            body: JSON.stringify(requestBody),
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: 'Bearer ' + token
-            }
-        }).then(res => {
-            if (res.status !== 200 && res.status !== 201) {
-                throw new Error('Failed!');
-            }
-            return res.json();
-        }).then(resData => {
+        this.fetchRequest(requestBody).then(resData => {
             this.setState(prevState => {
                 const updateEvents = [...prevState.events];
                 updateEvents.push({
@@ -133,18 +135,7 @@ export default class EventsPage extends Component {
                 `
         }
 
-        fetch('http://localhost:4000/graphql', {
-            method: 'POST',
-            body: JSON.stringify(requestBody),
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        }).then(res => {
-            if (res.status !== 200 && res.status !== 201) {
-                throw new Error('Failed!');
-            }
-            return res.json();
-        }).then(resData => {
+        this.fetchRequest(requestBody).then(resData => {
             const events = resData.data.events;
             if (this.isActive) {
                 this.setState({ events: events, isLoading: false });
@@ -180,24 +171,12 @@ export default class EventsPage extends Component {
                         }
                     }
                 `,
-                variables: {
-                    id: this.state.selectedEvent._id
-                }
+            variables: {
+                id: this.state.selectedEvent._id
+            }
         }
 
-        fetch('http://localhost:4000/graphql', {
-            method: 'POST',
-            body: JSON.stringify(requestBody),
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: 'Bearer ' + this.context.token
-            }
-        }).then(res => {
-            if (res.status !== 200 && res.status !== 201) {
-                throw new Error('Failed!');
-            }
-            return res.json();
-        }).then(resData => {
+        this.fetchRequest(requestBody).then(resData => {
             this.setState({ selectedEvent: null });
         }).catch(err => {
             console.log(err);
